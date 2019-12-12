@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM debian:10-slim
 
 RUN export KUBE_VERSION="v1.16.2"
 RUN export DOCTL_VERSION="1.33.1"
@@ -19,16 +19,15 @@ RUN wget -q -O /terraform.zip "https://releases.hashicorp.com/terraform/0.12.12/
     && unzip /terraform.zip -d /bin \
     && rm -f /terraform.zip
 
-RUN echo "Removing potential docker files"
-RUN apt remove docker docker-engine docker.io containerd runc
 RUN apt update
 RUN apt-get install -y apt-transport-https gnupg-agent software-properties-common
 
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 RUN apt-key fingerprint 0EBFCD88
 RUN add-apt-repository \
-       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+       "deb [arch=amd64] https://download.docker.com/linux/debian \
        $(lsb_release -cs) \
        stable"
 RUN apt update
 RUN apt-get install -y docker-ce docker-ce-cli containerd.io
+
